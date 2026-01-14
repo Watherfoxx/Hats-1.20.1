@@ -261,8 +261,10 @@ public class WindowSetColouriser extends Window<WorkspaceHats>
                 textG.constraints().bottom(svG, Constraint.Property.Type.BOTTOM, 0).left(svG, Constraint.Property.Type.LEFT, 1);
                 svB.constraints().top(svG, Constraint.Property.Type.BOTTOM, 4).right(padding, Constraint.Property.Type.LEFT, 26).left(this, Constraint.Property.Type.LEFT, edgePadding);
                 textB.constraints().bottom(svB, Constraint.Property.Type.BOTTOM, 0).left(svB, Constraint.Property.Type.LEFT, 1);
-                svA.constraints().top(svB, Constraint.Property.Type.BOTTOM, 4).right(padding, Constraint.Property.Type.LEFT, 26).left(this, Constraint.Property.Type.LEFT, edgePadding);
-                textA.constraints().bottom(svA, Constraint.Property.Type.BOTTOM, 0).left(svA, Constraint.Property.Type.LEFT, 1);
+                svA.constraints().top(this, Constraint.Property.Type.TOP, 8000);
+                textA.constraints().bottom(this, Constraint.Property.Type.TOP, 8000);
+                //svA.constraints().top(svB, Constraint.Property.Type.BOTTOM, 4).right(padding, Constraint.Property.Type.LEFT, 26).left(this, Constraint.Property.Type.LEFT, edgePadding);
+                //textA.constraints().bottom(svA, Constraint.Property.Type.BOTTOM, 0).left(svA, Constraint.Property.Type.LEFT, 1);
 
                 //Put these guys off screen
                 svH.constraints().top(this, Constraint.Property.Type.TOP, 8000);

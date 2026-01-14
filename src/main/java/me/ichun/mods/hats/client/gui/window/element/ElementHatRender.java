@@ -34,7 +34,7 @@ public class ElementHatRender<T extends ElementHatRender>  extends ElementClicka
     public HatsSavedData.HatPart hatOrigin;
     public HatsSavedData.HatPart hatLevel;
     public boolean toggleState;
-
+    public boolean hasNone;
     public boolean hasConflict;
     public boolean isViewAllHats;
 
@@ -44,10 +44,13 @@ public class ElementHatRender<T extends ElementHatRender>  extends ElementClicka
         this.hatOrigin = hatOrigin;
         this.hatLevel = hatLevel;
         this.isViewAllHats = isViewAllHats;
+        this.hasNone = false;
 
+        // Hats Menu is open in survival/adventure gm and we don't have this specific hat. We mark it for later.
         if(((WorkspaceHats)parent.getWorkspace()).usePlayerInventory() && this.hatLevel.count <= 0 && !isViewAllHats)
         {
-            this.disabled = true;
+            this.hasNone = true;
+            //this.disabled = true;
         }
 
     }
@@ -249,10 +252,10 @@ public class ElementHatRender<T extends ElementHatRender>  extends ElementClicka
             RenderHelper.drawColour(stack, 255, 0, 0, 30, getLeft() + 1, getTop() + 1, width - 2, height - 2, 0);
         }
 
-        if(!isViewAllHats && ((WorkspaceHats)getWorkspace()).usePlayerInventory() && hatLevel.count <= 0 || isViewAllHats && hatLevel.count <= 0 && hatLevel.hsbiser[2] == 1F)
+        /*if(!isViewAllHats && ((WorkspaceHats)getWorkspace()).usePlayerInventory() && hatLevel.count <= 0 || isViewAllHats && hatLevel.count <= 0 && hatLevel.hsbiser[2] == 1F)
         {
             RenderHelper.drawColour(stack, 0, 0, 0, 120, getLeft() + 1, getTop() + 1, width - 2, height - 2, 0); //greyout
-        }
+        }*/
 
         if(!Hats.configClient.disableHatNameRenderInHatSelector)
         {
@@ -315,7 +318,7 @@ public class ElementHatRender<T extends ElementHatRender>  extends ElementClicka
         {
             if(((WorkspaceHats)getWorkspace()).usePlayerInventory())
             {
-                String s = "x" + WorkspaceHats.FORMATTER.format(hatLevel.count); // we count from the level
+                String s = ""; // "x" + WorkspaceHats.FORMATTER.format(hatLevel.count); // we count from the level
 
                 stack.push();
                 stack.translate(getLeft() + 3, getBottom() - (getFontRenderer().FONT_HEIGHT) * scale - 1, 375F);
@@ -372,25 +375,25 @@ public class ElementHatRender<T extends ElementHatRender>  extends ElementClicka
             if(accessoryInfo != null)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.append(accessoryInfo.getDisplayName()).append("\n");
+                sb.append(accessoryInfo.getDisplayName());
                 if(!accessoryInfo.project.author.isEmpty())
                 {
-                    sb.append(I18n.format("hats.gui.tooltip.author", accessoryInfo.project.author)).append("\n");
+                    sb.append("\n").append(I18n.format("hats.gui.tooltip.author", accessoryInfo.project.author));
                 }
-                sb.append(I18n.format("hats.gui.tooltip.rarity", accessoryInfo.getRarity().getColour().toString() + accessoryInfo.getRarity().toString())).append("\n");
+                //sb.append("\n").append(I18n.format("hats.gui.tooltip.rarity", accessoryInfo.getRarity().getColour().toString() + accessoryInfo.getRarity().toString()));
                 if(hatLevel.count == 0 && hatLevel.hsbiser[2] == 1F)
                 {
-                    sb.append(I18n.format("hats.gui.tooltip.notUnlocked")).append("\n");
+                    sb.append("\n").append(I18n.format("hats.gui.tooltip.notUnlocked"));
                 }
-                sb.append("\n");
+                //sb.append("\n");
                 if(accessoryInfo.description != null)
                 {
-                    sb.append(accessoryInfo.description).append("\n").append("\n");
+                    sb.append("\n").append(accessoryInfo.description);
                 }
-                if(Hats.eventHandlerClient.serverHasMod)
+                /*if(Hats.eventHandlerClient.serverHasMod)
                 {
-                    sb.append(I18n.format("hats.gui.tooltip.worth", info.getWorthFor(accessoryInfo.name, 0)));
-                }
+                    sb.append("\n\n").append(I18n.format("hats.gui.tooltip.worth", info.getWorthFor(accessoryInfo.name, 0)));
+                }*/
 
                 return sb.toString();
             }

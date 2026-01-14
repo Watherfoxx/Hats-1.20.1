@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '10.3.4'
+version = '10.3.9'
 group = 'hats'
 archivesBaseName = 'Hats-1.16.5'
 
@@ -35,7 +35,7 @@ minecraft {
     mappings channel: 'snapshot', version: '20210309-1.16.5'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    accessTransformer = file('src/api/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -74,6 +74,10 @@ dependencies {
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
+    implementation fg.deobf("curse.maven:cosmetic-armor-reworked-237307:3738137")
+
+    // To use Tab Plugin
+    //compileOnly 'me.neznamy:tab-api:4.0.0'
 
     // Real examples
     // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
@@ -93,6 +97,9 @@ dependencies {
 
 repositories {
     mavenLocal()
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

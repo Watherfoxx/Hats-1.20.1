@@ -99,6 +99,7 @@ public class WindowHatsList extends Window<WorkspaceHats>
 
         public ElementHatsScrollView list;
         public ElementTextField textField;
+        //public ElementTextField indicatorField;
 
         public ViewHatsList(@Nonnull WindowHatsList parent)
         {
@@ -117,6 +118,11 @@ public class WindowHatsList extends Window<WorkspaceHats>
             textField.constraints().left(searchIcon, Constraint.Property.Type.RIGHT, 2).bottom(searchIcon, Constraint.Property.Type.BOTTOM, 1).top(searchIcon, Constraint.Property.Type.TOP, 1).width(this, Constraint.Property.Type.WIDTH, 40);
             elements.add(textField);
 
+            /*indicatorField = new ElementTextField(this);
+            textField.setId("test de texte ici");
+            textField.constraints().left(textField, Constraint.Property.Type.RIGHT, 2).bottom(textField, Constraint.Property.Type.BOTTOM, 1).top(textField, Constraint.Property.Type.TOP, 1).width(this, Constraint.Property.Type.WIDTH, 40);
+            elements.add(indicatorField);*/
+
             ElementScrollBar<?> sv = new ElementScrollBar<>(this, ElementScrollBar.Orientation.VERTICAL, 0.6F);
             sv.constraints().top(this, Constraint.Property.Type.TOP, padding)
                     .bottom(searchIcon, Constraint.Property.Type.TOP, padding) // 10 + 20 + 10, bottom + button height + padding
@@ -130,13 +136,29 @@ public class WindowHatsList extends Window<WorkspaceHats>
                     .right(sv, Constraint.Property.Type.LEFT, padding + 1);
             elements.add(list);
 
-            updateSearch("");
+            updateSearch("", "locked");
         }
 
         public void updateSearch(String query)
         {
+            updateSearch(query, "none");
+        }
+        public void updateSearch(String query, String rule)
+        {
             List<HatsSavedData.HatPart> hatPartSource = ((WorkspaceHats)getWorkspace()).getHatPartSource();
-            SortHandler.sort(Hats.configClient.filterSorters, hatPartSource, query.isEmpty());
+            if(rule.equals("locked"))
+            {
+                SortHandler.sort(SortHandler.getSortersForLockedHats(), hatPartSource, true);
+            }
+            else if(rule.equals("unlocked"))
+            {
+                SortHandler.sort(SortHandler.getSortersForUnlockedHats(), hatPartSource, true);
+            }
+            else
+            {
+                SortHandler.sort(Hats.configClient.filterSorters, hatPartSource, true);
+            }
+
             if(!query.isEmpty()) //we're searching for something.
             {
                 hatPartSource = hatPartSource.stream().filter(hatPart -> hatPart.has(query.toLowerCase(Locale.ROOT))).collect(Collectors.toList());

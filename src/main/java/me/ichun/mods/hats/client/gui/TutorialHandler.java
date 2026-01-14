@@ -68,22 +68,46 @@ public class TutorialHandler
     {
         WindowTutorial hatSelectTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowHatsList.getCurrentView().list.getLeft() + 25, workspace.windowHatsList.getCurrentView().list.getTop() + 40, (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w -> {
             WindowTutorial searchTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowHatsList.getCurrentView().textField.getLeft(), workspace.windowHatsList.getCurrentView().textField.getTop() + (workspace.windowHatsList.getCurrentView().textField.getHeight() / 2), (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w1 -> {
-                WindowTutorial addBtnTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowSidebar.getCurrentView().randomButton.getLeft(), workspace.windowSidebar.getCurrentView().randomButton.getBottom(), (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w2 -> {
-                    WindowTutorial dragTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowHatsList.getLeft(), workspace.windowHatsList.getTop() + (workspace.windowHatsList.getHeight() / 2), (int)(workspace.windowHatsList.getLeft() * 0.8F), 200, w7 -> {
-                        workspace.popup(0.6D, 0.5D, w4 -> {
-                            workspace.finishTutorial();
-                        }, I18n.format("hats.gui.tutorial.conclusion"));
+                WindowTutorial cancelBtnTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowSidebar.getCurrentView().cancelButton.getLeft(), workspace.windowSidebar.getCurrentView().cancelButton.getTop() + 10, (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w2 -> {
+                    WindowTutorial hideHelmetBtnTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowSidebar.getCurrentView().hideHelmetButton.getLeft(), workspace.windowSidebar.getCurrentView().hideHelmetButton.getTop() + 10, (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w3 -> {
+                        WindowTutorial hatsBtnTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowSidebar.getCurrentView().hatsButton.getLeft(), workspace.windowSidebar.getCurrentView().hatsButton.getTop() + 10, (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w4 -> {
+                            WindowTutorial lockedHatsBtnTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowSidebar.getCurrentView().lockedHatsButton.getLeft(), workspace.windowSidebar.getCurrentView().lockedHatsButton.getTop() + 10, (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w5 -> {
+                                WindowTutorial manageResourcesBtnTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowSidebar.getCurrentView().manageResourcesButton.getLeft(), workspace.windowSidebar.getCurrentView().manageResourcesButton.getTop() + 10, (int)(workspace.windowHatsList.getLeft() * 0.8F), 150, w6 -> {
+                                    WindowTutorial dragTut = new WindowTutorial(workspace, WindowTutorial.Direction.RIGHT, workspace.windowHatsList.getLeft(), workspace.windowHatsList.getTop() + (workspace.windowHatsList.getHeight() / 2), (int)(workspace.windowHatsList.getLeft() * 0.8F), 200, w7 -> {
+                                        workspace.popup(0.6D, 0.5D, w8 -> {
+                                            workspace.finishTutorial();
+                                        }, I18n.format("hats.gui.tutorial.conclusion"));
+                                        disableGreyoutClickOut(workspace);
+
+                                    }, I18n.format("hats.gui.tutorial.dragBar"));
+                                    workspace.addWindowWithGreyout(dragTut);
+                                    disableGreyoutClickOut(workspace);
+                                    dragTut.init();
+
+                                }, I18n.format("hats.gui.tutorial.manageResourcesButton"));
+                                workspace.addWindowWithGreyout(manageResourcesBtnTut);
+                                disableGreyoutClickOut(workspace);
+                                manageResourcesBtnTut.init();
+
+                            }, I18n.format("hats.gui.tutorial.lockedHatsButton"));
+                            workspace.addWindowWithGreyout(lockedHatsBtnTut);
+                            disableGreyoutClickOut(workspace);
+                            lockedHatsBtnTut.init();
+
+                        }, I18n.format("hats.gui.tutorial.hatsButton"));
+                        workspace.addWindowWithGreyout(hatsBtnTut);
                         disableGreyoutClickOut(workspace);
+                        hatsBtnTut.init();
 
-                    }, I18n.format("hats.gui.tutorial.dragBar"));
-                    workspace.addWindowWithGreyout(dragTut);
+                    }, I18n.format("hats.gui.tutorial.hideHelmetButton"));
+                    workspace.addWindowWithGreyout(hideHelmetBtnTut);
                     disableGreyoutClickOut(workspace);
-                    dragTut.init();
+                    hideHelmetBtnTut.init();
 
-                }, I18n.format("hats.gui.tutorial.additionalButtons"));
-                workspace.addWindowWithGreyout(addBtnTut);
+                }, I18n.format("hats.gui.tutorial.cancelButton"));
+                workspace.addWindowWithGreyout(cancelBtnTut);
                 disableGreyoutClickOut(workspace);
-                addBtnTut.init();
+                cancelBtnTut.init();
 
             }, I18n.format("hats.gui.tutorial.search"));
             workspace.addWindowWithGreyout(searchTut);

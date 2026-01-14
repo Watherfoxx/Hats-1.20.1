@@ -75,6 +75,7 @@
   "commands.hats.clear.success": "Tog bort %ss alla hattar. Jag hoppas du är nöjd, ditt monster.",
   "commands.hats.reextract.success": "Återextraherade och uppdaterade %s filer.",
   "commands.hats.reextract.failed": "Misslyckades att återextraherade och uppdatera alla filer. Se serverkonsolen för mer information.",
+  "commands.hats.giveRandomHat.full": "Todo",
 
   "hats.key.hatsMenu": "Hattmeny",
 
@@ -138,6 +139,11 @@
   "hats.gui.tutorial.clickForHatMissing": "Du ska egentligen ha en hatt nu, men det verkar som vi inte kan hitta en.\n\nKanske dina filter har dolt dem?\n\nHur som helst...",
   "hats.gui.tutorial.clickForHat": "Du kan klicka på en hatt för att bära den eller högerklicka för ytterligare alternativ",
   "hats.gui.tutorial.search": "Du kan söka efter en specifik hatt här.\n\nDu kan också högerklicka för att rensa fältet.",
+  "hats.gui.tutorial.cancelButton": "\nTodo",
+  "hats.gui.tutorial.hideHelmetButton": "\nTodo",
+  "hats.gui.tutorial.hatsButton": "\nTodo",
+  "hats.gui.tutorial.lockedHatsButton": "\nTodo",
+  "hats.gui.tutorial.manageResourcesButton": "\nTodo",
   "hats.gui.tutorial.additionalButtons": "Här finns det fler knappar.\n\nAnvänd musen för att se inforutor.",
   "hats.gui.tutorial.dragBar": "Behöver du mer utrymme för att se dina hattar?\n\nDra denna kant åt vänster.",
   "hats.gui.tutorial.conclusion": "Och det var allting!\n\nTack för att du spelar och njut av Hats!",
@@ -147,6 +153,9 @@
   "hats.gui.button.removeHat": "Ta bort hatt",
   "hats.gui.button.randomHat": "Slumpad hatt\n +SHIFT: Slumpad ton",
   "hats.gui.button.randomHatLauncher": "Slumpad hatt",
+  "hats.gui.button.hide_helmet": "Todo",
+  "hats.gui.button.lockedHats": "Todo",
+  "hats.gui.button.unlockedHats": "Todo",
   "hats.gui.button.sortingOptions": "Sorteringsalternativ",
   "hats.gui.button.hatResourceManagement": "Hattresurshantering",
 

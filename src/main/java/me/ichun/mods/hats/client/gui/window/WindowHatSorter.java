@@ -104,7 +104,8 @@ public class WindowHatSorter extends Window<WorkspaceHats>
 
                 for(ElementList.Item<?> item : filters.items)
                 {
-                    if(!((ElementToggleTextured<?>)item.getById("btnDisabled")).toggleState) //is not disabled
+                    // We switch the state of the filter. The condition is true if the filter is not in a disabled state
+                    if(!((ElementToggleTextured<?>)item.getById("btnDisabled")).toggleState)
                     {
                         newSorters.add((HatSorter)item.getObject());
                     }

@@ -5,6 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import me.ichun.mods.hats.common.Hats;
 import me.ichun.mods.hats.common.entity.EntityHat;
+import me.ichun.mods.hats.common.hats.EnumRarity;
 import me.ichun.mods.hats.common.hats.HatHandler;
 import me.ichun.mods.hats.common.hats.HatInfo;
 import me.ichun.mods.hats.common.hats.HatResourceHandler;
@@ -12,9 +13,6 @@ import me.ichun.mods.hats.common.packet.PacketEntityHatDetails;
 import me.ichun.mods.hats.common.packet.PacketRehatify;
 import me.ichun.mods.hats.common.packet.PacketUpdateHats;
 import me.ichun.mods.hats.common.world.HatsSavedData;
-import me.ichun.mods.ichunutil.common.head.HeadHandler;
-import me.ichun.mods.ichunutil.common.iChunUtil;
-import me.ichun.mods.ichunutil.common.util.IOUtil;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -23,16 +21,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.io.InputStream;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+
+import static me.ichun.mods.hats.common.hats.HatHandler.*;
+
 
 public class CommandHats
 {
@@ -82,12 +84,33 @@ public class CommandHats
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(context -> clear(context.getSource(), EntityArgument.getPlayer(context, "player"))))
                         )
+                        .then(Commands.literal("giveRandomHat")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .then(Commands.literal("common")
+                                                .executes(context -> giveRandomHat(EntityArgument.getPlayer(context, "player"), "common"))
+                                        )
+                                        .then(Commands.literal("uncommon")
+                                                .executes(context -> giveRandomHat(EntityArgument.getPlayer(context, "player"), "uncommon"))
+                                        )
+                                        .then(Commands.literal("rare")
+                                                .executes(context -> giveRandomHat(EntityArgument.getPlayer(context, "player"), "rare"))
+                                        )
+                                        .then(Commands.literal("epic")
+                                                .executes(context -> giveRandomHat(EntityArgument.getPlayer(context, "player"), "epic"))
+                                        )
+                                        .then(Commands.literal("legendary")
+                                                .executes(context -> giveRandomHat(EntityArgument.getPlayer(context, "player"), "legendary"))
+                                        )
+                                )
+                        )
                         .then(Commands.literal("reextract")
                                 .then(Commands.literal("heads")
                                         .executes(context -> {
                                             try
                                             {
-                                                InputStream in = iChunUtil.class.getResourceAsStream("/heads.zip");
+                                                Hats.LOGGER.info(context.getSource() + " tried to use /hats reextract heads");
+
+                                                /*InputStream in = iChunUtil.class.getResourceAsStream("/heads.zip");
                                                 if(in != null)
                                                 {
                                                     int i = IOUtil.extractFiles(HeadHandler.getHeadsDir(), in, true);
@@ -100,7 +123,7 @@ public class CommandHats
                                                 {
                                                     iChunUtil.LOGGER.error("Error extracting heads.zip. InputStream was null.");
                                                     context.getSource().sendFeedback(new TranslationTextComponent("commands.hats.reextract.failed"), true);
-                                                }
+                                                }*/
                                             }
                                             catch(Throwable e)
                                             {
@@ -116,7 +139,9 @@ public class CommandHats
                                         .executes(context -> {
                                             try
                                             {
-                                                InputStream in = Hats.class.getResourceAsStream("/hats.zip");
+                                                Hats.LOGGER.info(context.getSource() + " tried to use /hats reextract hats");
+
+                                                /*InputStream in = Hats.class.getResourceAsStream("/hats.zip");
                                                 if(in != null)
                                                 {
                                                     int i = IOUtil.extractFiles(HatResourceHandler.getHatsDir(), in, true);
@@ -129,7 +154,7 @@ public class CommandHats
                                                 {
                                                     Hats.LOGGER.error("Error reextracting hats. InputStream was null.");
                                                     context.getSource().sendFeedback(new TranslationTextComponent("commands.hats.reextract.failed"), true);
-                                                }
+                                                }*/
                                             }
                                             catch(Throwable e)
                                             {
@@ -242,7 +267,7 @@ public class CommandHats
         boolean flag = false;
 
         HatsSavedData.HatPart hatPart = getAsPart(hatInfos, 0);
-        ArrayList<HatsSavedData.HatPart> playerInventory = HatHandler.getPlayerInventory(player);
+        ArrayList<HatsSavedData.HatPart> playerInventory = getPlayerInventory(player);
         if(hatInfos.size() > 1) //removing accessory
         {
             for(HatsSavedData.HatPart part : playerInventory)
@@ -264,7 +289,7 @@ public class CommandHats
 
         if(flag)
         {
-            HatHandler.markSaveDirty();
+            markSaveDirty();
             source.sendFeedback(new TranslationTextComponent("commands.hats.remove.success", hatInfos.get(hatInfos.size() - 1).name, player.getName()), true);
             Hats.channel.sendTo(new PacketUpdateHats(HatHandler.getPlayerHatsNBT(player), true), player);
         }
@@ -278,11 +303,80 @@ public class CommandHats
 
     private static int clear(CommandSource source, ServerPlayerEntity player)
     {
-        ArrayList<HatsSavedData.HatPart> playerInventory = HatHandler.getPlayerInventory(player);
+        ArrayList<HatsSavedData.HatPart> playerInventory = getPlayerInventory(player);
         playerInventory.clear();
-        HatHandler.markSaveDirty();
-        source.sendFeedback(new TranslationTextComponent("commands.hats.clear.success",player.getName()), true);
+        markSaveDirty();
+        source.sendFeedback(new TranslationTextComponent("commands.hats.clear.success", player.getName()), true);
         Hats.channel.sendTo(new PacketUpdateHats(HatHandler.getPlayerHatsNBT(player), true), player);
+        return Command.SINGLE_SUCCESS;
+    }
+    private static @Nullable HatsSavedData.HatPart getRandomHat(ServerPlayerEntity player, EnumRarity hatRarity)
+    {
+        HatsSavedData.HatPart part = null;
+        ArrayList<HatsSavedData.HatPart> source = getHatSource(player);
+
+        if(!source.isEmpty())
+        {
+            source = source.stream().filter(hatPart -> (hatPart.count <= 0 && HatResourceHandler.getInfo(hatPart).getRarity() == hatRarity)).collect(Collectors.toCollection(ArrayList::new));
+
+            if(!source.isEmpty())
+            {
+                if(HatHandler.useInventory(player)) // for example, when not in creative mode
+                {
+                    HatsSavedData.HatPart pickedHatPart = source.get(player.getRNG().nextInt(source.size()));
+                    part = pickedHatPart.createCopy();
+                    markSaveDirty();
+                }
+                else //DO NOT USE INVENTORY!!
+                {
+                    part = source.get(player.getRNG().nextInt(source.size()));
+                }
+            }
+        }
+
+        return part;
+    }
+
+    private static int giveRandomHat(ServerPlayerEntity player, String hatRarity)
+    {
+        if(player != null)
+        {
+            MinecraftServer server = player.getServer();
+            assert server != null;
+
+            HatsSavedData.HatPart newPart;
+
+            switch (hatRarity)
+            {
+                case "common":
+                    newPart = getRandomHat(player, EnumRarity.COMMON);
+                    break;
+                default:
+                case "uncommon":
+                    newPart = getRandomHat(player, EnumRarity.UNCOMMON);
+                    break;
+                case "rare":
+                    newPart = getRandomHat(player, EnumRarity.RARE);
+                    break;
+                case "epic":
+                    newPart = getRandomHat(player, EnumRarity.EPIC);
+                    break;
+                case "legendary":
+                    newPart = getRandomHat(player, EnumRarity.LEGENDARY);
+                    break;
+            }
+
+            if(newPart != null)
+            {
+                server.getCommandManager().handleCommand(server.getCommandSource(), "hats addCount " + player.getName().getString() + " \"" + newPart.name + "\" 1");
+            }
+            else
+            {
+                server.getCommandManager().handleCommand(server.getCommandSource(), "mm items give " + player.getName().getString() + " full_hats_" + hatRarity + "_DropTable");
+                player.sendMessage(new TranslationTextComponent("commands.hats.giveRandomHat.full"), player.getUniqueID());
+            }
+        }
+
         return Command.SINGLE_SUCCESS;
     }
 }

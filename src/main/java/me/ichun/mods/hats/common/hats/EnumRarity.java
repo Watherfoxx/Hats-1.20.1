@@ -7,7 +7,7 @@ public enum EnumRarity
     //Keep in order of increasing rarity
     COMMON(TextFormatting.WHITE),
     UNCOMMON(TextFormatting.GREEN),
-    RARE(TextFormatting.BLUE),
+    RARE(TextFormatting.AQUA),
     EPIC(TextFormatting.LIGHT_PURPLE),
     LEGENDARY(TextFormatting.GOLD);
 

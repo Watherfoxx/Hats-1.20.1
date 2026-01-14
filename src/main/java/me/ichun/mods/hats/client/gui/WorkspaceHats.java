@@ -2,6 +2,10 @@ package me.ichun.mods.hats.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import lain.mods.cos.api.CosArmorAPI;
+import lain.mods.cos.api.inventory.CAStacksBase;
+import lain.mods.cos.impl.ModObjects;
+import lain.mods.cos.impl.network.packet.PacketSetSkinArmor;
 import me.ichun.mods.hats.client.gui.window.*;
 import me.ichun.mods.hats.client.gui.window.element.ElementHatRender;
 import me.ichun.mods.hats.common.Hats;
@@ -88,8 +92,8 @@ public class WorkspaceHats extends Workspace
         windowHatsList.setWidth((int)Math.floor((getWidth() / 2F)) - (padding + 22));
         windowHatsList.constraint.apply();
 
-        //space from the list = 2 px
-        windowSidebar.constraints().left(windowHatsList, Constraint.Property.Type.RIGHT, 2).top(windowHatsList, Constraint.Property.Type.TOP, 0).bottom(windowHatsList, Constraint.Property.Type.BOTTOM, 0);
+        //space from the list = 3 px
+        windowSidebar.constraints().left(windowHatsList, Constraint.Property.Type.RIGHT, 3).top(windowHatsList, Constraint.Property.Type.TOP, 20).bottom(windowHatsList, Constraint.Property.Type.BOTTOM, 0);
         windowSidebar.setWidth(20);
         windowSidebar.constraint.apply();
 
@@ -318,11 +322,26 @@ public class WorkspaceHats extends Workspace
             if(hatLauncher != null)
             {
                 Hats.channel.sendToServer(new PacketHatLauncherCustomisation(HatHandler.getHatPart(hatLauncher)));
-
             }
+
+            HatsSavedData.HatPart currentlyWearing = HatHandler.getHatPart(hatEntity);
+
+            // If this Hat is not unlocked
+            if(currentlyWearing.count <= 0)
+            {
+                // Remove the cosmetic Hat's display
+                HatHandler.assignNoHat(hatEntity);
+
+                // Shows back the player's real armor
+                CAStacksBase invCosArmor = CosArmorAPI.getCAStacksClient(hatEntity.getUniqueID());
+                invCosArmor.setSkinArmor(3, false);
+                // Server update to send to all the clients
+                ModObjects.network.sendToServer(new PacketSetSkinArmor(3, false));
+            }
+
             //Send the details of what we changed to the server. Server end only copies the customisation, not the count as well.
             //Don't send the new hat that we selected to the server if we're editing the item.
-            Hats.channel.sendToServer(new PacketHatCustomisation(changedHats, true, hatLauncher == null ? HatHandler.getHatPart(hatEntity) : new HatsSavedData.HatPart()));
+            Hats.channel.sendToServer(new PacketHatCustomisation(changedHats, true, hatLauncher == null ? currentlyWearing : new HatsSavedData.HatPart()));
 
             //Update our inventory with what has been changed
             for(HatsSavedData.HatPart hatPart : Hats.eventHandlerClient.hatsInventory.hatParts)
@@ -371,6 +390,10 @@ public class WorkspaceHats extends Workspace
 
     public void setNewHat(@Nullable HatsSavedData.HatPart newHat, boolean notify)
     {
+        // Todo: Check if we have the hat (count > 0)
+        /*
+            See HatHandler.getRandomHat(PlayerEntity player)
+         */
         if(newHat == null)
         {
             if(hatLauncher != null)

@@ -22,6 +22,41 @@ public class SortHandler
         put("sorterRarity", SorterRarity.class);
     }};
 
+    public static ArrayList<HatSorter> getSortersForUnlockedHats()
+    {
+        ArrayList<HatSorter> sorters = new ArrayList<>();
+
+        sorters.add(new FilterHas());
+
+        sorters.add(new SorterFavourite());
+
+        SorterRarity sorterRarity = new SorterRarity();
+        sorterRarity.setInverse(true);
+        sorters.add(sorterRarity);
+
+        sorters.add(new SorterAlphabetical());
+
+        return sorters;
+    }
+
+    public static ArrayList<HatSorter> getSortersForLockedHats()
+    {
+        ArrayList<HatSorter> sorters = new ArrayList<>();
+
+        FilterHas hasHat = new FilterHas();
+        hasHat.setInverse(true);
+        sorters.add(hasHat);
+
+        sorters.add(new SorterFavourite());
+
+        SorterRarity sorterRarity = new SorterRarity();
+        sorterRarity.setInverse(true);
+        sorters.add(sorterRarity);
+
+        sorters.add(new SorterAlphabetical());
+
+        return sorters;
+    }
 
     public static void sort(ArrayList<HatSorter> sorters, List<?> hats, boolean allowFilter)
     {

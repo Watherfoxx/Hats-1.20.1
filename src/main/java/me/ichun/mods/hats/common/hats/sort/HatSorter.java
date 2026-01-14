@@ -14,6 +14,8 @@ public abstract class HatSorter
 
     public boolean isFilter() { return false; }
 
+    public void setInverse(boolean value) { isInverse = value; }
+
     public final void sortRecursive(List<?> hats)
     {
         if(!hats.isEmpty())

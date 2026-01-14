@@ -53,7 +53,7 @@ public class ConfigClient extends ConfigBase
     public List<String> filterSorterConfig = Util.make(new ArrayList<>(), list -> {
         list.add("filterUndiscovered");
         list.add("sorterFavourite");
-        list.add("sorterRarity:inverse");
+        list.add("sorterRarity");
         list.add("sorterAlphabetical");
     });
 

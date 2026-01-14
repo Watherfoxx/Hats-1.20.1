@@ -82,7 +82,7 @@ public class HatInfo
 
     public String getDisplayName()
     {
-        return (contributorUUID != null ? TextFormatting.AQUA : getRarity().getColour()).toString() + name;
+        return (contributorUUID != null ? TextFormatting.BLUE : getRarity().getColour()).toString() + name;
     }
 
     public EnumRarity getRarity()

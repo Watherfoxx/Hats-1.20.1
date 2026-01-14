@@ -221,10 +221,13 @@ public class LayerHat<T extends LivingEntity, M extends EntityModel<T>> extends 
 
                 stack.scale(hatScale, hatScale, hatScale);
 
-                float armorScale = helper.getHeadArmorScale(living, stack, partialTicks, headIndex);
-                if(armorScale != 1F)
+                if(!(living instanceof PlayerEntity)) // Do not rescale Player with armor!
                 {
-                    stack.scale(armorScale, armorScale, armorScale);
+                    float armorScale = helper.getHeadArmorScale(living, stack, partialTicks, headIndex);
+                    if (armorScale != 1F)
+                    {
+                        stack.scale(armorScale, armorScale, armorScale);
+                    }
                 }
             }
 

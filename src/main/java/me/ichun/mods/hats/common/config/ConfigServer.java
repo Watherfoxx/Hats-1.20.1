@@ -78,7 +78,7 @@ public class ConfigServer extends ConfigBase
     public boolean mobHatTakeover = true;
 
     @Prop(min = 0)
-    public int hatEntityLifespan = 6000;
+    public int hatEntityLifespan = 600; // 6000
 
     public boolean hatLauncherReplacesPlayerHat = true;
 
